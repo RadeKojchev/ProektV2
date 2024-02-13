@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html>
+ 
+<head>
+    <meta charset = "utf-8">
+    <title>Letting you cook gram</title>
+    <link rel = "stylesheet" type = "text/css" href = "styles1.css">
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+    <body onload="onLoad()">
+
+        <div id="header" class="header">
+            <nav class="menu" style = "width: 50%; text-align: right">
+                <ul class="list">
+                    <li>
+                        <a href="./index.html"><button id="b1"> Home</button></a>
+                    </li>
+                    <li>
+                        <a href="./gallery.html"><button id="b1"> CookGram</button></a>
+                    </li>
+                    <li>
+                        <div class="dropdown">
+                            <button id="b1"> Categories</button>
+                            <ul class="dropdown-content">
+                                <li>
+                                    <a href="./metalen-set.html"><button> Metal utensils</button></a>
+                                </li>
+                                <li>
+                                    <a href="./food.html"><button> Ceramic utensils</button></a>
+                                </li>
+                                <li>
+                                    <a href="./movie.html"><button> Wooden utensils</button></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <table id="table1">
+            <tr>
+                <td id="tabledata" style="text-align: left; vertical-align: top; ">
+                    <img id="images" src="./images/keramika%20kafe%20slika.jpg">
+                    <div id="picdesc">
+                        <h2 id="desc">"Na kafe so komshivkata"</h2>
+                        <img onclick="handleClick()" id="clickme1" src="images/like-button.png" class="like" name="button1" />
+                        <h5 class="liketext"></h5>
+                        <p id="likeCounter1">0</p>
+                    </div>
+    
+                    <div id="box">
+                        <p id="comment1" class="c1"></p>
+                        <form onsubmit="comment1()">
+                            <input type="text" id="input1" placeholder="Enter comment" autocapitalize="off" />
+                            <input type="submit" id="submitbutton" value="Add comment">
+                        </form>
+                    </div>
+                </td>
+                <td id="tabledata" style="text-align: left; vertical-align: top; ">
+                    <img id="images" src="./images/serpa so lisja.jpg">
+                    </a>
+                    <div id="picdesc">
+                        <h2 id="desc">#ZimnicaSeSpremaZaZimaDaNema</h2>
+                        <img onclick="handleClick()" id="clickme2" src="images/like-button.png" class="like" name="button2" />
+                        <h5 class="liketext"></h5>
+                        <p id="likeCounter2">0</p>
+                    </div>
+                    <div id="box">
+                        <p id="comment2"></p>
+                        <form onsubmit="comment2()">
+                            <input type="text" id="input2" placeholder="Enter comment" autocapitalize="off" />
+                            <input type="submit" id="submitbutton" value="Add comment">
+                        </form>
+                    </div>
+                </td>
+                <td id="tabledata" style="text-align: left; vertical-align: top; ">
+                    <img id="images" src="./images/tarun.jpg" style="justify-content: right;"/>
+                    </a>
+                    <div id="picdesc">
+                        <h2 id="desc">Nasledstvoto od baba mi #Throwback #Vreminja#Deca#Kori#Brashno</h2>
+                        <img onclick="handleClick()" id="clickme3" src="images/like-button.png" class="like" name="button3" />
+                        <h5 class="liketext"></h5>
+                        <p id="likeCounter3">0</p>
+                    </div>
+    
+                    <div id="box">
+                        <p id="comment3"></p>
+                        <form onsubmit="comment3()">
+                            <input type="text" id="input3" placeholder="Enter comment" autocapitalize="off" />
+                            <input type="submit" id="submitbutton" value="Add comment">
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td id="tabledata" class="addPhoto0" style="text-align: left; vertical-align: top; ">
+                    <div id="box">
+                        <form onsubmit="handleAdd()">
+                            <div>
+                                    <input type="file" id="myFile" accept="image/*" name="image">
+                            </div>
+                            <input type="submit" value="Add photo">
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var guest = prompt("Hello", "Please enter your name here");
+                $('body').on('click', '.like', function() {
+                    var buttonName = $(this).attr('name');
+                    var likeCounter = $(this).next('.liketext').next('p');
+                    var count = parseInt(localStorage.getItem('likes' + buttonName.charAt(buttonName.length - 1))) || 0;
+                    count++;
+                    likeCounter.text(count);
+                    localStorage.setItem('likes' + buttonName.charAt(buttonName.length - 1), count);
+                });
+                function onLoad() {
+                    for (var i = 1; i <= 3; i++) {
+                        var comments = JSON.parse(localStorage.getItem('comments' + i)) || [];
+                        var string = comments.join("<hr>");
+                        $('#comment' + i).html(string);
+
+                        var likeNum = JSON.parse(localStorage.getItem('likes' + i)) || 0;
+                        $('#likeCounter' + i).text(likeNum);
+                    }
+                }
+                onLoad();
+                $('form').submit(function(event) {
+                    event.preventDefault();
+                    var inputId = $(this).find('input[type="text"]').attr('id');
+                    var commentNumber = inputId.charAt(inputId.length - 1);
+                    var commentText = $('#' + inputId).val();
+                    var currentDate = new Date();
+                    var comment = guest + ': ' + commentText + '<br>' + currentDate.toUTCString();
+                    var comments = JSON.parse(localStorage.getItem('comments' + commentNumber)) || [];
+                    comments.push(comment);
+                    localStorage.setItem('comments' + commentNumber, JSON.stringify(comments));
+                    $('#' + 'comment' + commentNumber).html(comments.join("<hr>"));
+                });
+                $('#box').on('submit', 'form', function(event) {
+                    event.preventDefault();
+                });
+            });
+        </script>
+    </body>
+</html>
+    </body>
+</html>
